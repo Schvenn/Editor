@@ -1,3 +1,9 @@
+$validcolours=[enum]::getvalues([system.consolecolor])
+
+function font($newcolour){# (Internal) Simplify changing font colours.
+if($validcolours -contains $newcolour){[console]::foregroundcolor="$newcolour"}
+else{getcolours}}
+
 function edit ($file){# Set Notepad++ to the default editor, if available and edit files passed to it.
 $global:edit = "notepad"; $npp = "Notepad++\notepad++.exe"; $paths = @("$env:ProgramFiles", "$env:ProgramFiles(x86)")
 
@@ -15,7 +21,7 @@ else {$_.Group|Sort-Object FullName|%{$folderPath=($_.FullName -replace [regex]:
 
 # Provide a selection menu when no module name was provided.
 Write-Host -ForegroundColor Yellow "`nSelect a module to edit:`n"; $i=0; $prevFolder=''; $flat|%{if ($_.Folder -ne $prevFolder) {$folderIndex++; $prevFolder=$_.Folder}; $color = if ($_.Folder -eq '' -or $_.GroupSize -eq 1) {'Gray'} else {if ($folderIndex % 2 -eq 0) {'Yellow'} else {'Green'}}; 
-Write-Host "$i. " -NoNewline -ForegroundColor Cyan; Write-Host "$($_.Display)" -ForegroundColor $color; $i++}; font Yellow; $sel=Read-Host "`nSelect module"; ""; $index=[int]$sel; if ($index -lt 0 -or $index -ge $flat.Count) {Write-Host "Invalid selection`n" -ForegroundColor Red; return}; edit $flat[$index].Path; return}
+Write-Host "$i. " -NoNewline -ForegroundColor Cyan; Write-Host "$($_.Display)" -ForegroundColor $color; $i++}; font Yellow; $sel=Read-Host "`nSelect module"; Font Gray; ""; $index=[int]$sel; if ($index -lt 0 -or $index -ge $flat.Count) {Write-Host "Invalid selection`n" -ForegroundColor Red; return}; edit $flat[$index].Path; return}
 
 # If a module name was provided, edit it.
 $path="$env:userprofile\documents\powershell\modules\$script\$script.psm1"; if (Test-Path $path) {edit "$path"}
